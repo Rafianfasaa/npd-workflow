@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPD Workflow System - Candy Factory</title>
+    <style>
+        :root {
+            --color-primary: #FF6B9D;
+            --color-primary-hover: #FF5088;
+            --color-success: #4CAF50;
+            --color-warning: #FF9800;
+            --color-danger: #f44336;
+            --color-bg: #FFF8F3;
+            --color-surface: #FFFFFF;
+            --color-border: #FFE4E1;
+            --color-text: #333333;
+            --color-text-muted: #666666;
+            --color-accent-yellow: #FFD54F;
+            --color-accent-blue: #4FC3F7;
+            --color-accent-green: #81C784;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #FFF8F3 0%, #FFE4E1 100%);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF8FB3 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border: none;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.2);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #FFFFFF;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            color: #FFFFFF;
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--color-border);
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--color-text);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--color-surface);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 2px solid var(--color-border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--color-text);
+        }
+
+        input, select, textarea {
+            padding: 10px 12px;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: var(--color-text);
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: #FFFFFF;
+            box-shadow: 0 2px 6px rgba(255, 107, 157, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4);
+        }
+
+        .btn-secondary {
+            background: #F5F5F5;
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: #E8E8E8;
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--color-danger);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .status-approved {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-draft {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        th {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: rgba(255, 107, 157, 0.05);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--color-text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFF5F7 100%);
+            border: 2px solid var(--color-border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-warning {
+            background: rgba(251, 191, 36, 0.15);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--color-surface);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid var(--color-border);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: var(--color-text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-close:hover {
+            color: var(--color-text);
+        }
+
+        .approver-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .approver-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #FFF8F3;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+        }
+
+        .approver-info {
+            flex: 1;
+        }
+
+        .approver-name {
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .approver-email {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+
+        .btn-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍬 NPD Workflow System</h1>
+            <p class="subtitle">New Product Development - Candy Factory</p>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('dashboard')">Dashboard</button>
+            <button class="tab-btn" onclick="switchTab('newRequest')">New Request</button>
+            <button class="tab-btn" onclick="switchTab('myApprovals')">My Approvals</button>
+            <button class="tab-btn" onclick="switchTab('allRequests')">All Requests</button>
+            <button class="tab-btn" onclick="switchTab('config')">Configuration</button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-total">0</div>
+                    <div class="stat-label">Total Requests</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-pending" style="color: var(--color-warning)">0</div>
+                    <div class="stat-label">Pending Approvals</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-approved" style="color: var(--color-success)">0</div>
+                    <div class="stat-label">Approved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-overdue" style="color: var(--color-danger)">0</div>
+                    <div class="stat-label">Overdue</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Recent Activity</div>
+                <table id="recent-activity-table">
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Product Name</th>
+                            <th>Current Stage</th>
+                            <th>Status</th>
+                            <th>Last Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-activity-body">
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">📊</div>
+                                    <div>No requests yet. Create your first NPD request!</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- New Request Tab -->
+        <div id="newRequest" class="tab-content">
+            <div class="card">
+                <div class="card-header">I. PPDR - Product/Packaging Development Request</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Brand Name *</label>
+                        <input type="text" id="brand" placeholder="Brand name">
+                    </div>
+                    <div class="form-group">
+                        <label>Buyer Name *</label>
+                        <input type="text" id="buyerName" placeholder="Buyer/customer name">
+                    </div>
+                    <div class="form-group">
+                        <label>Product Name *</label>
+                        <input type="text" id="productName" placeholder="e.g., Choco Delight Bar">
+                    </div>
+                    <div class="form-group">
+                        <label>Product Category *</label>
+                        <select id="productCategory">
+                            <option value="">Select category...</option>
+                            <option value="Chocolate Bar">Chocolate Bar</option>
+                            <option value="Gummy">Gummy</option>
+                            <option value="Hard Candy">Hard Candy</option>
+                            <option value="Lollipop">Lollipop</option>
+                            <option value="Toffee">Toffee</option>
+                            <option value="Caramel">Caramel</option>
+                            <option value="Licorice">Licorice</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Request Type *</label>
+                        <select id="requestType">
+                            <option value="">Select type...</option>
+                            <option value="New Formula">New Formula</option>
+                            <option value="Revisi/Improvement Formula">Revisi/Improvement Formula</option>
+                            <option value="New Packaging (Size/Spec)">New Packaging (Size/Spec)</option>
+                            <option value="Revisi Packaging">Revisi Packaging</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Details *</label>
+                        <textarea id="ppdrDetails" placeholder="Product/packaging development details"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Requester Name *</label>
+                        <input type="text" id="requesterName" placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label>Requester Email *</label>
+                        <input type="email" id="requesterEmail" placeholder="your.email@company.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Target Launch Date</label>
+                        <input type="date" id="targetLaunchDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Target Market *</label>
+                        <select id="targetMarket">
+                            <option value="">Select market...</option>
+                            <option value="Singapore">Singapore</option>
+                            <option value="Hong Kong">Hong Kong</option>
+                            <option value="Malaysia">Malaysia</option>
+                            <option value="Thailand">Thailand</option>
+                            <option value="Global">Global</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Strategic Rationale *</label>
+                        <input type="text" id="strategicRationale" placeholder="e.g., Premium gifting segment">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Ingredients &amp; Formulation</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Key Ingredients</label>
+                        <textarea id="keyIngredients" placeholder="e.g., Sugar, cocoa mass, milk powder, hazelnut"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Allergen Flags</label>
+                        <input type="text" id="allergenFlags" placeholder="e.g., Contains nuts, dairy">
+                    </div>
+                    <div class="form-group">
+                        <label>Dietary Claims</label>
+                        <input type="text" id="dietaryClaims" placeholder="e.g., Halal, Vegetarian">
+                    </div>
+                    <div class="form-group">
+                        <label>Sweetener Type</label>
+                        <select id="sweetenerType">
+                            <option value="">Select sweetener...</option>
+                            <option value="Sugar">Sugar</option>
+                            <option value="Polyol">Polyol</option>
+                            <option value="Stevia">Stevia</option>
+                            <option value="Sugar-free blend">Sugar-free blend</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Novel Ingredient?</label>
+                        <select id="novelIngredient">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Raw Materials &amp; Supply</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Primary Raw Material Codes (SAP)</label>
+                        <input type="text" id="rawMaterialCodes" placeholder="e.g., RM-001, RM-045">
+                    </div>
+                    <div class="form-group">
+                        <label>New Raw Materials Required?</label>
+                        <select id="newRawMaterials">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Key Suppliers</label>
+                        <input type="text" id="keySuppliers" placeholder="Supplier names or codes">
+                    </div>
+                    <div class="form-group">
+                        <label>Critical RM Risk</label>
+                        <select id="rmRisk">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Packaging</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Pack Format</label>
+                        <select id="packFormat">
+                            <option value="">Select format...</option>
+                            <option value="Flow-wrap">Flow-wrap</option>
+                            <option value="Pouch">Pouch</option>
+                            <option value="Jar">Jar</option>
+                            <option value="Box">Box</option>
+                            <option value="Bag">Bag</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pack Size (grams)</label>
+                        <input type="number" id="packSize" placeholder="e.g., 50">
+                    </div>
+                    <div class="form-group">
+                        <label>Units Per Case</label>
+                        <input type="number" id="unitsPerCase" placeholder="e.g., 24">
+                    </div>
+                    <div class="form-group">
+                        <label>Packaging Material Type</label>
+                        <select id="packagingMaterial">
+                            <option value="">Select material...</option>
+                            <option value="Plastic">Plastic</option>
+                            <option value="Paper">Paper</option>
+                            <option value="Foil">Foil</option>
+                            <option value="Composite">Composite</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Sustainability Flag</label>
+                        <input type="text" id="sustainabilityFlag" placeholder="e.g., 50% recycled content">
+                    </div>
+                    <div class="form-group">
+                        <label>New Packaging Material Required?</label>
+                        <select id="newPackaging">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Commercial &amp; Finance</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Estimated SRP</label>
+                        <input type="number" step="0.01" id="estimatedSRP" placeholder="e.g., 5.90">
+                    </div>
+                    <div class="form-group">
+                        <label>Currency</label>
+                        <select id="currency">
+                            <option value="SGD">SGD</option>
+                            <option value="HKD">HKD</option>
+                            <option value="MYR">MYR</option>
+                            <option value="THB">THB</option>
+                            <option value="USD">USD</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Target Annual Volume (units)</label>
+                        <input type="number" id="targetVolume" placeholder="e.g., 100000">
+                    </div>
+                    <div class="form-group">
+                        <label>Target GM %</label>
+                        <input type="number" step="0.1" id="targetGM" placeholder="e.g., 45">
+                    </div>
+                    <div class="form-group">
+                        <label>High Level COGS Est</label>
+                        <input type="number" step="0.01" id="cogsEst" placeholder="e.g., 2.50">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Manufacturing &amp; QA</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Manufacturing Plant</label>
+                        <input type="text" id="manufacturingPlant" placeholder="Plant code or name">
+                    </div>
+                    <div class="form-group">
+                        <label>Line Required</label>
+                        <input type="text" id="lineRequired" placeholder="Production line code">
+                    </div>
+                    <div class="form-group">
+                        <label>Complexity Flag</label>
+                        <select id="complexityFlag">
+                            <option value="Simple">Simple</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Complex">Complex</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Special Processing Requirements</label>
+                        <textarea id="specialProcessing" placeholder="e.g., Allergen changeover required"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Shelf Life Target (months)</label>
+                        <input type="number" id="shelfLife" placeholder="e.g., 12">
+                    </div>
+                    <div class="form-group">
+                        <label>Micro Requirements</label>
+                        <input type="text" id="microRequirements" placeholder="e.g., Standard">
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-actions">
+                <button class="btn btn-primary" onclick="submitRequest()">Submit NPD Request</button>
+                <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
+            </div>
+        </div>
+
+        <!-- My Approvals Tab -->
+        <div id="myApprovals" class="tab-content">
+            <div class="alert alert-warning">
+                <span>⚠️</span>
+                <div>Demo mode: Using demo@company.com as current user. In production, this would authenticate with Google Workspace SSO.</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Pending Approvals for You</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Product</th>
+                            <th>Step</th>
+                            <th>Due Date</th>
+                            <th>Days Overdue</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="my-approvals-body">
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">✅</div>
+                                    <div>No pending approvals</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- All Requests Tab -->
+        <div id="allRequests" class="tab-content">
+            <div class="card">
+                <div class="card-header">All NPD Requests</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Current Stage</th>
+                            <th>Status</th>
+                            <th>Target Launch</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="all-requests-body">
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">📋</div>
+                                    <div>No requests found</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Configuration Tab -->
+        <div id="config" class="tab-content">
+            <div class="card">
+                <div class="card-header">Approval Workflow Configuration</div>
+                <p style="color: var(--color-text-muted); margin-bottom: 20px; font-size: 14px;">
+                    Define the approval stages and assign approvers. Each NPD request will go through these steps in sequence.
+                </p>
+                <div id="workflow-steps"></div>
+                <button class="btn btn-secondary" onclick="addWorkflowStep()" style="margin-top: 12px;">+ Add Approval Step</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Email Reminder Settings</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>First Reminder (days after due date)</label>
+                        <input type="number" id="reminder1Days" value="1" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Second Reminder (days after due date)</label>
+                        <input type="number" id="reminder2Days" value="3" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Escalation Threshold (reminders before escalation)</label>
+                        <input type="number" id="escalationThreshold" value="3" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Default SLA (days per approval)</label>
+                        <input type="number" id="defaultSLA" value="5" min="1">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="saveReminderSettings()" style="margin-top: 12px;">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approval Modal -->
+    <div id="approvalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Approval Decision</div>
+                <button class="btn-close" onclick="closeModal('approvalModal')">&times;</button>
+            </div>
+            <div id="approval-modal-body"></div>
+            <div class="form-group">
+                <label>Comments</label>
+                <textarea id="approval-comments" placeholder="Enter your decision comments..."></textarea>
+            </div>
+            <div class="btn-actions">
+                <button class="btn btn-success" onclick="submitApproval('Approved')">✓ Approve</button>
+                <button class="btn btn-danger" onclick="submitApproval('Rejected')">✗ Reject</button>
+                <button class="btn btn-secondary" onclick="closeModal('approvalModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Request Modal -->
+    <div id="viewRequestModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <div class="modal-title">NPD Request Details</div>
+                <button class="btn-close" onclick="closeModal('viewRequestModal')">&times;</button>
+            </div>
+            <div id="view-request-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // Data Storage
+        let npdRequests = [];
+        let npdApprovals = [];
+        let workflowSteps = [
+            { stepOrder: 1, stepName: 'PPDR - Product/Packaging Dev Request', approverRole: 'Sales IB', approverEmail: 'salesib@company.com', sla: 3 },
+            { stepOrder: 2, stepName: 'RDF - R&D Product Development', approverRole: 'R&D', approverEmail: 'rd@company.com', sla: 7 },
+            { stepOrder: 3, stepName: 'RDF - PDD Packaging Development', approverRole: 'PDD', approverEmail: 'pdd@company.com', sla: 7 },
+            { stepOrder: 4, stepName: 'Sample Approval', approverRole: 'R&D', approverEmail: 'rd@company.com', sla: 5 },
+            { stepOrder: 5, stepName: 'Design Approval', approverRole: 'PDD', approverEmail: 'pdd@company.com', sla: 5 },
+            { stepOrder: 6, stepName: 'Trial Production Approval', approverRole: 'Production', approverEmail: 'production@company.com', sla: 7 },
+            { stepOrder: 7, stepName: 'PO Commercial IB Review', approverRole: 'Supply Planning', approverEmail: 'supplyplanning@company.com', sla: 3 },
+            { stepOrder: 8, stepName: 'NPF - New Project Form Approval', approverRole: 'Purchasing', approverEmail: 'purchasing@company.com', sla: 5 },
+            { stepOrder: 9, stepName: 'QA & Regulatory Final Approval', approverRole: 'QA', approverEmail: 'qa@company.com', sla: 3 }
+        ];
+        let reminderSettings = { reminder1Days: 1, reminder2Days: 3, escalationThreshold: 3, defaultSLA: 5 };
+        let currentUser = 'demo@company.com';
+        let currentApproval = null;
+        let currentRequestView = null;
+		
+		// Tambahkan ini
+		const API_ENDPOINT = 'https://script.google.com/a/macros/yupi.co.id/s/AKfycbz3292_YzF-VPQ2vmbN51GSmVnT8rX1cMkDMPGNba1iu_ShBpxuCqSmy3Rbq2FlIdH72A/exec'; // Ganti dengan URL dari Step 3
+
+        // Load data from localStorage
+       // Replace loadData() function
+		async function loadData() {
+			try {
+				// Load all data in parallel
+				const [requestsRes, approvalsRes, workflowRes, settingsRes] = await Promise.all([
+					fetch(`${API_ENDPOINT}?action=getAllRequests`),
+					fetch(`${API_ENDPOINT}?action=getAllApprovals`),
+					fetch(`${API_ENDPOINT}?action=getWorkflowConfig`),
+					fetch(`${API_ENDPOINT}?action=getReminderSettings`)
+				]);
+
+				const requestsData = await requestsRes.json();
+				const approvalsData = await approvalsRes.json();
+				const workflowData = await workflowRes.json();
+				const settingsData = await settingsRes.json();
+
+				if (requestsData.success) {
+					npdRequests = requestsData.requests || [];
+					currentUser = requestsData.currentUser || 'demo@company.com';
+				}
+				if (approvalsData.success) npdApprovals = approvalsData.approvals || [];
+				if (workflowData.success) workflowSteps = workflowData.workflow || [];
+				if (settingsData.success) reminderSettings = settingsData.settings || {};
+
+				console.log('Data loaded from Google Workspace');
+				renderWorkflowConfig();
+				renderReminderSettings();
+				renderDashboard();
+			} catch (error) {
+				console.error('Load error:', error);
+				// Fallback ke localStorage jika API gagal
+				const savedRequests = localStorage.getItem('npdRequests');
+				const savedApprovals = localStorage.getItem('npdApprovals');
+				const savedWorkflow = localStorage.getItem('workflowSteps');
+				const savedSettings = localStorage.getItem('reminderSettings');
+
+				if (savedRequests) npdRequests = JSON.parse(savedRequests);
+				if (savedApprovals) npdApprovals = JSON.parse(savedApprovals);
+				if (savedWorkflow) workflowSteps = JSON.parse(savedWorkflow);
+				if (savedSettings) reminderSettings = JSON.parse(savedSettings);
+				
+				renderWorkflowConfig();
+				renderReminderSettings();
+				renderDashboard();
+			}
+		}
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('npdRequests', JSON.stringify(npdRequests));
+            localStorage.setItem('npdApprovals', JSON.stringify(npdApprovals));
+            localStorage.setItem('workflowSteps', JSON.stringify(workflowSteps));
+            localStorage.setItem('reminderSettings', JSON.stringify(reminderSettings));
+        }
+
+        // Tab Navigation
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'dashboard') renderDashboard();
+            if (tabName === 'myApprovals') renderMyApprovals();
+            if (tabName === 'allRequests') renderAllRequests();
+            if (tabName === 'config') renderWorkflowConfig();
+        }
+
+        // Generate unique ID
+        function generateRequestId() {
+            const year = new Date().getFullYear();
+            const num = String(npdRequests.length + 1).padStart(3, '0');
+            return `NPD-${year}-${num}`;
+        }
+
+        // Submit new NPD request
+        function submitRequest() {
+            const requestData = {
+                requestId: generateRequestId(),
+                brand: document.getElementById('brand').value,
+                buyerName: document.getElementById('buyerName').value,
+                productName: document.getElementById('productName').value,
+                productCategory: document.getElementById('productCategory').value,
+                requestType: document.getElementById('requestType').value,
+                ppdrDetails: document.getElementById('ppdrDetails').value,
+                requesterName: document.getElementById('requesterName').value,
+                requesterEmail: document.getElementById('requesterEmail').value,
+                requestDate: new Date().toISOString().split('T')[0],
+                targetLaunchDate: document.getElementById('targetLaunchDate').value,
+                targetMarket: document.getElementById('targetMarket').value,
+                strategicRationale: document.getElementById('strategicRationale').value,
+                keyIngredients: document.getElementById('keyIngredients').value,
+                allergenFlags: document.getElementById('allergenFlags').value,
+                dietaryClaims: document.getElementById('dietaryClaims').value,
+                sweetenerType: document.getElementById('sweetenerType').value,
+                novelIngredient: document.getElementById('novelIngredient').value,
+                rawMaterialCodes: document.getElementById('rawMaterialCodes').value,
+                newRawMaterials: document.getElementById('newRawMaterials').value,
+                keySuppliers: document.getElementById('keySuppliers').value,
+                rmRisk: document.getElementById('rmRisk').value,
+                packFormat: document.getElementById('packFormat').value,
+                packSize: document.getElementById('packSize').value,
+                unitsPerCase: document.getElementById('unitsPerCase').value,
+                packagingMaterial: document.getElementById('packagingMaterial').value,
+                sustainabilityFlag: document.getElementById('sustainabilityFlag').value,
+                newPackaging: document.getElementById('newPackaging').value,
+                estimatedSRP: document.getElementById('estimatedSRP').value,
+                currency: document.getElementById('currency').value,
+                targetVolume: document.getElementById('targetVolume').value,
+                targetGM: document.getElementById('targetGM').value,
+                cogsEst: document.getElementById('cogsEst').value,
+                manufacturingPlant: document.getElementById('manufacturingPlant').value,
+                lineRequired: document.getElementById('lineRequired').value,
+                complexityFlag: document.getElementById('complexityFlag').value,
+                specialProcessing: document.getElementById('specialProcessing').value,
+                shelfLife: document.getElementById('shelfLife').value,
+                microRequirements: document.getElementById('microRequirements').value,
+                overallStatus: 'In Review',
+                currentStage: workflowSteps[0].stepName,
+                lastUpdated: new Date().toISOString().split('T')[0]
+            };
+
+            // Validation
+            if (!requestData.brand || !requestData.buyerName || !requestData.productName || 
+                !requestData.productCategory || !requestData.requestType || !requestData.ppdrDetails ||
+                !requestData.requesterName || !requestData.requesterEmail || !requestData.targetMarket) {
+                alert('Please fill in all required fields (marked with *)');
+                return;
+            }
+
+            npdRequests.push(requestData);
+
+            // Create approval steps
+            workflowSteps.forEach(step => {
+                const dueDate = new Date();
+                dueDate.setDate(dueDate.getDate() + step.sla);
+                
+                npdApprovals.push({
+                    requestId: requestData.requestId,
+                    stepOrder: step.stepOrder,
+                    stepName: step.stepName,
+                    approverRole: step.approverRole,
+                    approverEmail: step.approverEmail,
+                    status: step.stepOrder === 1 ? 'Pending' : 'Not Started',
+                    dueDate: dueDate.toISOString().split('T')[0],
+                    lastReminderSent: null,
+                    reminderCount: 0,
+                    escalated: false
+                });
+            });
+
+            saveData();
+            clearForm();
+            alert(`NPD Request ${requestData.requestId} submitted successfully!`);
+            switchTab('dashboard');
+        }
+
+        // Clear form
+        function clearForm() {
+            document.querySelectorAll('#newRequest input, #newRequest select, #newRequest textarea').forEach(field => {
+                if (field.type === 'checkbox') field.checked = false;
+                else if (field.id === 'currency') field.value = 'SGD';
+                else if (field.id === 'novelIngredient' || field.id === 'newRawMaterials' || field.id === 'newPackaging') field.value = 'No';
+                else if (field.id === 'rmRisk') field.value = 'Low';
+                else if (field.id === 'complexityFlag') field.value = 'Simple';
+                else field.value = '';
+            });
+        }
+
+        // Render dashboard
+        function renderDashboard() {
+            const total = npdRequests.length;
+            const pendingApprovals = npdApprovals.filter(a => a.status === 'Pending').length;
+            const approved = npdRequests.filter(r => r.overallStatus === 'Approved').length;
+            const overdue = npdApprovals.filter(a => {
+                if (a.status !== 'Pending') return false;
+                const due = new Date(a.dueDate);
+                return due < new Date();
+            }).length;
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-pending').textContent = pendingApprovals;
+            document.getElementById('stat-approved').textContent = approved;
+            document.getElementById('stat-overdue').textContent = overdue;
+
+            const tbody = document.getElementById('recent-activity-body');
+            if (npdRequests.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📊</div>
+                                <div>No requests yet. Create your first NPD request!</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const recent = [...npdRequests].reverse().slice(0, 10);
+            tbody.innerHTML = recent.map(req => `
+                <tr onclick="viewRequest('${req.requestId}')">
+                    <td>${req.requestId}</td>
+                    <td>${req.productName}</td>
+                    <td>${req.currentStage}</td>
+                    <td><span class="status-badge status-${req.overallStatus.toLowerCase().replace(' ', '-')}">${req.overallStatus}</span></td>
+                    <td>${req.lastUpdated}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Render my approvals
+        function renderMyApprovals() {
+            const myPending = npdApprovals.filter(a => 
+                a.approverEmail === currentUser && a.status === 'Pending'
+            );
+
+            const tbody = document.getElementById('my-approvals-body');
+            if (myPending.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">✅</div>
+                                <div>No pending approvals</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = myPending.map(appr => {
+                const req = npdRequests.find(r => r.requestId === appr.requestId);
+                const dueDate = new Date(appr.dueDate);
+                const today = new Date();
+                const daysOverdue = Math.floor((today - dueDate) / (1000 * 60 * 60 * 24));
+                const overdueText = daysOverdue > 0 ? `<span style="color: var(--color-danger)">${daysOverdue}</span>` : '-';
+
+                return `
+                    <tr>
+                        <td>${appr.requestId}</td>
+                        <td>${req ? req.productName : 'Unknown'}</td>
+                        <td>${appr.stepName}</td>
+                        <td>${appr.dueDate}</td>
+                        <td>${overdueText}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="openApprovalModal('${appr.requestId}', ${appr.stepOrder})">Review</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Render all requests
+        function renderAllRequests() {
+            const tbody = document.getElementById('all-requests-body');
+            if (npdRequests.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📋</div>
+                                <div>No requests found</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = npdRequests.map(req => `
+                <tr>
+                    <td>${req.requestId}</td>
+                    <td>${req.productName}</td>
+                    <td>${req.productCategory}</td>
+                    <td>${req.currentStage}</td>
+                    <td><span class="status-badge status-${req.overallStatus.toLowerCase().replace(' ', '-')}">${req.overallStatus}</span></td>
+                    <td>${req.targetLaunchDate || '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-secondary" onclick="viewRequest('${req.requestId}')">View</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Open approval modal
+        function openApprovalModal(requestId, stepOrder) {
+            const req = npdRequests.find(r => r.requestId === requestId);
+            const appr = npdApprovals.find(a => a.requestId === requestId && a.stepOrder === stepOrder);
+            
+            if (!req || !appr) return;
+
+            currentApproval = appr;
+            
+            const modalBody = document.getElementById('approval-modal-body');
+            modalBody.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <p><strong>Request ID:</strong> ${req.requestId}</p>
+                    <p><strong>Product Name:</strong> ${req.productName}</p>
+                    <p><strong>Category:</strong> ${req.productCategory}</p>
+                    <p><strong>Brand:</strong> ${req.brand || '-'}</p>
+                    <p><strong>Target Market:</strong> ${req.targetMarket}</p>
+                    <p><strong>Strategic Rationale:</strong> ${req.strategicRationale}</p>
+                    <p><strong>Approval Step:</strong> ${appr.stepName}</p>
+                    <p><strong>Due Date:</strong> ${appr.dueDate}</p>
+                </div>
+                <div style="padding: 12px; background: var(--color-bg); border-radius: 6px; border: 1px solid var(--color-border); margin-bottom: 16px;">
+                    <button class="btn btn-sm btn-secondary" onclick="viewRequest('${requestId}')" style="width: 100%">View Full Request Details</button>
+                </div>
+            `;
+
+            document.getElementById('approval-comments').value = '';
+            document.getElementById('approvalModal').classList.add('active');
+        }
+
+        // Submit approval decision
+        function submitApproval(decision) {
+            const comments = document.getElementById('approval-comments').value;
+            
+            if (!comments) {
+                alert('Please enter comments for your decision');
+                return;
+            }
+
+            currentApproval.status = decision;
+            currentApproval.decisionDate = new Date().toISOString().split('T')[0];
+            currentApproval.decisionComments = comments;
+
+            const req = npdRequests.find(r => r.requestId === currentApproval.requestId);
+            
+            if (decision === 'Approved') {
+                // Move to next step
+                const nextStep = npdApprovals.find(a => 
+                    a.requestId === currentApproval.requestId && 
+                    a.stepOrder === currentApproval.stepOrder + 1
+                );
+                
+                if (nextStep) {
+                    nextStep.status = 'Pending';
+                    req.currentStage = nextStep.stepName;
+                } else {
+                    req.overallStatus = 'Approved';
+                    req.currentStage = 'Completed';
+                }
+            } else {
+                req.overallStatus = 'Rejected';
+            }
+
+            req.lastUpdated = new Date().toISOString().split('T')[0];
+
+            saveData();
+            closeModal('approvalModal');
+            alert(`Request ${currentApproval.requestId} has been ${decision.toLowerCase()}`);
+            renderMyApprovals();
+            renderDashboard();
+        }
+
+        // View request details
+        function viewRequest(requestId) {
+            const req = npdRequests.find(r => r.requestId === requestId);
+            if (!req) return;
+
+            currentRequestView = req;
+            const approvals = npdApprovals.filter(a => a.requestId === requestId);
+
+            const modalBody = document.getElementById('view-request-body');
+            modalBody.innerHTML = `
+                <div style="max-height: 60vh; overflow-y: auto;">
+                    <div class="card" style="margin-bottom: 16px;">
+                        <div class="card-header">Core Information</div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; font-size: 14px;">
+                            <div><strong>Request ID:</strong> ${req.requestId}</div>
+                            <div><strong>Status:</strong> <span class="status-badge status-${req.overallStatus.toLowerCase().replace(' ', '-')}">${req.overallStatus}</span></div>
+                            <div><strong>Product Name:</strong> ${req.productName}</div>
+                            <div><strong>Category:</strong> ${req.productCategory}</div>
+                            <div><strong>Brand:</strong> ${req.brand || '-'}</div>
+                            <div><strong>Target Market:</strong> ${req.targetMarket}</div>
+                            <div><strong>Requester:</strong> ${req.requesterName}</div>
+                            <div><strong>Email:</strong> ${req.requesterEmail}</div>
+                            <div><strong>Request Date:</strong> ${req.requestDate}</div>
+                            <div><strong>Target Launch:</strong> ${req.targetLaunchDate || '-'}</div>
+                            <div style="grid-column: 1 / -1;"><strong>Strategic Rationale:</strong> ${req.strategicRationale}</div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 16px;">
+                        <div class="card-header">Ingredients & Formulation</div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; font-size: 14px;">
+                            <div style="grid-column: 1 / -1;"><strong>Key Ingredients:</strong> ${req.keyIngredients || '-'}</div>
+                            <div><strong>Allergens:</strong> ${req.allergenFlags || '-'}</div>
+                            <div><strong>Dietary Claims:</strong> ${req.dietaryClaims || '-'}</div>
+                            <div><strong>Sweetener Type:</strong> ${req.sweetenerType || '-'}</div>
+                            <div><strong>Novel Ingredient:</strong> ${req.novelIngredient}</div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 16px;">
+                        <div class="card-header">Packaging</div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; font-size: 14px;">
+                            <div><strong>Pack Format:</strong> ${req.packFormat || '-'}</div>
+                            <div><strong>Pack Size:</strong> ${req.packSize ? req.packSize + 'g' : '-'}</div>
+                            <div><strong>Units/Case:</strong> ${req.unitsPerCase || '-'}</div>
+                            <div><strong>Material:</strong> ${req.packagingMaterial || '-'}</div>
+                            <div><strong>Sustainability:</strong> ${req.sustainabilityFlag || '-'}</div>
+                            <div><strong>New Material Req:</strong> ${req.newPackaging}</div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 16px;">
+                        <div class="card-header">Commercial & Finance</div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; font-size: 14px;">
+                            <div><strong>Est. SRP:</strong> ${req.estimatedSRP ? req.currency + ' ' + req.estimatedSRP : '-'}</div>
+                            <div><strong>Target Volume:</strong> ${req.targetVolume ? Number(req.targetVolume).toLocaleString() + ' units/year' : '-'}</div>
+                            <div><strong>Target GM:</strong> ${req.targetGM ? req.targetGM + '%' : '-'}</div>
+                            <div><strong>COGS Est:</strong> ${req.cogsEst ? req.currency + ' ' + req.cogsEst : '-'}</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">Approval Progress</div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Step</th>
+                                    <th>Approver</th>
+                                    <th>Status</th>
+                                    <th>Decision Date</th>
+                                    <th>Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${approvals.map(a => `
+                                    <tr>
+                                        <td>${a.stepName}</td>
+                                        <td>${a.approverEmail}</td>
+                                        <td><span class="status-badge status-${a.status.toLowerCase().replace(' ', '-')}">${a.status}</span></td>
+                                        <td>${a.decisionDate || '-'}</td>
+                                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${a.decisionComments || '-'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('viewRequestModal').classList.add('active');
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Workflow configuration
+        function renderWorkflowConfig() {
+            const container = document.getElementById('workflow-steps');
+            container.innerHTML = workflowSteps.map((step, index) => `
+                <div class="approver-item" style="margin-bottom: 12px;">
+                    <div style="flex: 1; display: grid; grid-template-columns: 50px 1fr 1fr 1fr 80px; gap: 12px; align-items: center;">
+                        <div style="font-weight: 600;">#${step.stepOrder}</div>
+                        <input type="text" value="${step.stepName}" onchange="updateWorkflowStep(${index}, 'stepName', this.value)" style="padding: 6px 10px;">
+                        <input type="text" value="${step.approverRole}" onchange="updateWorkflowStep(${index}, 'approverRole', this.value)" style="padding: 6px 10px;">
+                        <input type="email" value="${step.approverEmail}" onchange="updateWorkflowStep(${index}, 'approverEmail', this.value)" style="padding: 6px 10px;">
+                        <input type="number" value="${step.sla}" onchange="updateWorkflowStep(${index}, 'sla', this.value)" style="padding: 6px 10px;" min="1">
+                    </div>
+                    <button class="btn btn-sm btn-danger" onclick="removeWorkflowStep(${index})">✗</button>
+                </div>
+            `).join('');
+        }
+
+        function addWorkflowStep() {
+            workflowSteps.push({
+                stepOrder: workflowSteps.length + 1,
+                stepName: 'New Step',
+                approverRole: 'Role',
+                approverEmail: 'email@company.com',
+                sla: 5
+            });
+            saveData();
+            renderWorkflowConfig();
+        }
+
+        function updateWorkflowStep(index, field, value) {
+            workflowSteps[index][field] = value;
+            saveData();
+        }
+
+        function removeWorkflowStep(index) {
+            if (confirm('Remove this approval step?')) {
+                workflowSteps.splice(index, 1);
+                workflowSteps.forEach((step, i) => step.stepOrder = i + 1);
+                saveData();
+                renderWorkflowConfig();
+            }
+        }
+
+        // Reminder settings
+        function renderReminderSettings() {
+            document.getElementById('reminder1Days').value = reminderSettings.reminder1Days;
+            document.getElementById('reminder2Days').value = reminderSettings.reminder2Days;
+            document.getElementById('escalationThreshold').value = reminderSettings.escalationThreshold;
+            document.getElementById('defaultSLA').value = reminderSettings.defaultSLA;
+        }
+
+        function saveReminderSettings() {
+            reminderSettings = {
+                reminder1Days: parseInt(document.getElementById('reminder1Days').value),
+                reminder2Days: parseInt(document.getElementById('reminder2Days').value),
+                escalationThreshold: parseInt(document.getElementById('escalationThreshold').value),
+                defaultSLA: parseInt(document.getElementById('defaultSLA').value)
+            };
+            saveData();
+            alert('Reminder settings saved successfully!');
+        }
+
+        // Simulate email reminders (in production this would be backend)
+        function checkAndSendReminders() {
+            const today = new Date();
+            
+            npdApprovals.forEach(appr => {
+                if (appr.status !== 'Pending') return;
+                
+                const dueDate = new Date(appr.dueDate);
+                const daysSinceDue = Math.floor((today - dueDate) / (1000 * 60 * 60 * 24));
+                
+                const lastReminder = appr.lastReminderSent ? new Date(appr.lastReminderSent) : null;
+                const daysSinceLastReminder = lastReminder ? Math.floor((today - lastReminder) / (1000 * 60 * 60 * 24)) : 999;
+                
+                if (daysSinceDue >= reminderSettings.reminder1Days && daysSinceLastReminder >= 1) {
+                    const req = npdRequests.find(r => r.requestId === appr.requestId);
+                    console.log(`[EMAIL REMINDER] To: ${appr.approverEmail}`);
+                    console.log(`Subject: Approval Reminder - ${req.productName} (${appr.requestId})`);
+                    console.log(`Body: Your approval for ${appr.stepName} is ${daysSinceDue} days overdue.`);
+                    
+                    appr.lastReminderSent = today.toISOString().split('T')[0];
+                    appr.reminderCount++;
+                    
+                    if (appr.reminderCount >= reminderSettings.escalationThreshold) {
+                        appr.escalated = true;
+                        console.log(`[ESCALATION] CC: NPD Lead - Request ${appr.requestId} escalated`);
+                    }
+                }
+            });
+            
+            saveData();
+        }
+
+        // Initialize
+        loadData();
+        renderDashboard();
+        
+        // Simulate reminder check every 5 seconds (in production would be daily cron)
+        setInterval(checkAndSendReminders, 5000);
+
+        // Click outside modal to close
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
+
